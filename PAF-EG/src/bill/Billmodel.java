@@ -17,6 +17,7 @@ private Connection connect()
  {e.printStackTrace();}
  return con;
  }
+
 public String insertItem(String cusname, String cusaccount, String date, String units, String amount)
  {
  String output = "";
@@ -38,11 +39,13 @@ public String insertItem(String cusname, String cusaccount, String date, String 
  // execute the statement
  preparedStmt.execute();
  con.close();
- output = "Bill Details Inserted successfully";
+ 
+ String newItems = readItems();
+ output = "{\"status\":\"success\", \"data\": \"" + newItems + "\"}"; 
  }
  catch (Exception e)
  {
- output = "Error while inserting the item.";
+ output = "{\"status\":\"error\", \"data\": \"Error while inserting the bill.\"}"; 
  System.err.println(e.getMessage());
 System.out.println(e.getMessage());
  }
@@ -75,18 +78,14 @@ public String readItems()
  
  // Add into the html table
  output += "<tr><td><input id='hidBill_IDUpdate' name='hidBill_IDUpdate' type='hidden' value='" + Bill_ID + "</td>";
- output += "<td>" + Customer_Name + "</td>";
+ output += "<tr><td>" + Customer_Name + "</td>";
  output += "<td>" + Customer_Account + "</td>";
  output += "<td>" + Date + "</td>";
  output += "<td>" + Units_Used + "</td>";
  output += "<td>" + Amount + "</td>";
  
  // buttons
- output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>" + 
- "<td><form method='post' action='bill.jsp'>" + 
-		 "<input name='btnRemove' type='submit' value='Remove' class='btn btn-danger'>" + 
- "<input name='hidBill_IDDelete' type='hidden' value='" + Bill_ID + "'>" + 
-		 "</form></td></tr>";
+ output +=  "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>" + "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='" + Bill_ID + "'>" + "</td></tr>"; 
  }
  con.close();
  // Complete the html table
@@ -99,6 +98,7 @@ public String readItems()
  }
  return output;
  }
+
 public String updateItem(String ID, String cusname, String cusaccount, String date, String units, String amount)
 
  {
@@ -121,15 +121,20 @@ public String updateItem(String ID, String cusname, String cusaccount, String da
  // execute the statement
  preparedStmt.execute();
  con.close();
- output = "Bill Details Updated successfully";
+ 
+ String newItems = readItems();
+ output = "{\"status\":\"success\", \"data\": \"" + newItems + "\"}"; 
+
  }
+ 
  catch (Exception e)
  {
- output = "Error while updating the bill.";
+ output = "{\"status\":\"error\", \"data\": \"Error while updating the bill.\"}"; 
  System.err.println(e.getMessage());
  }
  return output;
  }
+
 public String deleteItem(String Bill_ID)
  {
  String output = "";
@@ -146,11 +151,12 @@ public String deleteItem(String Bill_ID)
  // execute the statement
  preparedStmt.execute();
  con.close();
- output = "Bill Deleted successfully";
+ String newItems = readItems();
+ output = "{\"status\":\"success\", \"data\": \"" + newItems + "\"}"; 
  }
  catch (Exception e)
  {
- output = "Error while deleting the bill.";
+ output = "{\"status\":\"error\", \"data\": \"Error while deleting the bill.\"}"; 
  System.err.println(e.getMessage());
  }
  return output;
