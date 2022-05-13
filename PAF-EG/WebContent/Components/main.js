@@ -1,12 +1,3 @@
-$(document).ready(function()
-{
-if ($("#alertSuccess").text().trim() == "")
- {
- $("#alertSuccess").hide();
- }
- $("#alertError").hide();
-});
-// SAVE ============================================
 $(document).on("click", "#btnSave", function(event)
 {
 // Clear alerts---------------------
@@ -23,48 +14,96 @@ if (status != true)
  return;
  }
 // If valid------------------------
- $("#formItem").submit();
+var type = ($("#hidBill_IDSave").val() == "") ? "POST" : "PUT";
+ $.ajax(
+ {
+ url : "BillAPI",
+ type : type,
+ data : $("#formItem").serialize(),
+ dataType : "text",
+ complete : function(response, status)
+ {
+ onItemSaveComplete(response.responseText, status);
+ }
+ });
 });
-// UPDATE==========================================
+
+function onItemSaveComplete(response, status)
+{
+if (status == "success")
+ {
+ var resultSet = JSON.parse(response);
+ if (resultSet.status.trim() == "success")
+ {
+ $("#alertSuccess").text("Successfully saved.");
+ $("#alertSuccess").show();
+ $("#divItemsGrid").html(resultSet.data);
+ } else if (resultSet.status.trim() == "error")
+ {
+ $("#alertError").text(resultSet.data);
+ $("#alertError").show();
+ }
+ } else if (status == "error")
+ {
+ $("#alertError").text("Error while saving.");
+ $("#alertError").show();
+ } else
+ {
+ $("#alertError").text("Unknown error while saving..");
+ $("#alertError").show();
+ }
+ 14
+ $("#hidBill_IDSave").val("");
+ $("#formItem")[0].reset();
+}
+
 $(document).on("click", ".btnUpdate", function(event)
 {
- $("#hidItemIDSave").val($(this).closest("tr").find('#hidItemIDUpdate').val());
- $("#itemCode").val($(this).closest("tr").find('td:eq(0)').text());
- $("#itemName").val($(this).closest("tr").find('td:eq(1)').text());
- $("#itemPrice").val($(this).closest("tr").find('td:eq(2)').text());
- $("#itemDesc").val($(this).closest("tr").find('td:eq(3)').text());
+$("#hidBill_IDSave").val($(this).data("Bill_ID"));
+ $("#Customer_Name").val($(this).closest("tr").find('td:eq(0)').text());
+ $("#Customer_Account").val($(this).closest("tr").find('td:eq(1)').text());
+ $("#Date").val($(this).closest("tr").find('td:eq(2)').text());
+  $("#Units_Used").val($(this).closest("tr").find('td:eq(2)').text());
+ $("#Amount").val($(this).closest("tr").find('td:eq(3)').text());
 });
-// CLIENT-MODEL================================================================
-function validateItemForm()
+
+$(document).on("click", ".btnRemove", function(event)
 {
-// CODE
-if ($("#itemCode").val().trim() == "")
+ $.ajax(
  {
- return "Insert Item Code.";
- }
-// NAME
-if ($("#itemName").val().trim() == "")
+ url : "BillAPI",
+ type : "DELETE",
+ data : "Bill_ID=" + $(this).data("Bill_ID"),
+ dataType : "text",
+ complete : function(response, status)
  {
- return "Insert Item Name.";
+ onItemDeleteComplete(response.responseText, status);
  }
- 9
-// PRICE-------------------------------
-if ($("#itemPrice").val().trim() == "")
+ });
+});
+
+function onItemDeleteComplete(response, status)
+{
+if (status == "success")
  {
- return "Insert Item Price.";
- }
-// is numerical value
-var tmpPrice = $("#itemPrice").val().trim();
-if (!$.isNumeric(tmpPrice))
+ var resultSet = JSON.parse(response);
+ if (resultSet.status.trim() == "success")
  {
- return "Insert a numerical value for Item Price.";
- }
-// convert to decimal price
- $("#itemPrice").val(parseFloat(tmpPrice).toFixed(2));
-// DESCRIPTION------------------------
-if ($("#itemDesc").val().trim() == "")
+ $("#alertSuccess").text("Successfully deleted.");
+ $("#alertSuccess").show();
+ $("#divItemsGrid").html(resultSet.data);
+ } else if (resultSet.status.trim() == "error")
  {
- return "Insert Item Description.";
+ $("#alertError").text(resultSet.data);
+ $("#alertError").show();
  }
-return true;
+ } else if (status == "error")
+ {
+ $("#alertError").text("Error while deleting.");
+ $("#alertError").show();
+ } else
+ {
+ $("#alertError").text("Unknown error while deleting..");
+ $("#alertError").show();
+ }
 }

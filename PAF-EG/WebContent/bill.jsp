@@ -12,25 +12,28 @@ pageEncoding="ISO-8859-1"%>
 </head>
 <body>
 <div class="container"><div class="row"><div class="col-6">
-<h1>Items Management V10.1</h1>
+<h1>Bill Management</h1>
 <form id="formItem" name="formItem">
- Item code:
- <input id="itemCode" name="itemCode" type="text"
+ Customer Name:
+ <input id="Customer_Name" name="Customer_Name" type="text"
  class="form-control form-control-sm">
- <br> Item name:
- <input id="itemName" name="itemName" type="text"
+ <br> Customer Account No:
+ <input id="Customer_Account" name="Customer_Account" type="text"
  class="form-control form-control-sm">
- <br> Item price:
- <input id="itemPrice" name="itemPrice" type="text"
+ <br> Bill Date:
+ <input id="Date" name="Date" type="text"
  class="form-control form-control-sm">
- <br> Item description:
- <input id="itemDesc" name="itemDesc" type="text"
+  <br> Units Used:
+ <input id="Units_Used" name="Units_Used" type="text"
+ class="form-control form-control-sm">
+ <br> Amount:
+ <input id="Amount" name="Amount" type="text"
  class="form-control form-control-sm">
  <br>
  <input id="btnSave" name="btnSave" type="button" value="Save"
  class="btn btn-primary">
- <input type="hidden" id="hidItemIDSave"
- name="hidItemIDSave" value="">
+ <input type="hidden" id="hidBill_IDSave"
+ name="hidBill_IDSave" value="">
 </form>
 <div id="alertSuccess" class="alert alert-success"></div>
 <div id="alertError" class="alert alert-danger"></div>
