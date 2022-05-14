@@ -18,40 +18,46 @@ private Connection connect()
  return con;
  }
 
-public String insertItem(String cusname, String cusaccount, String date, String units, String amount)
- {
- String output = "";
- try
- {
- Connection con = connect();
- if (con == null)
- {return "Error while connecting to the database for inserting."; }
- // create a prepared statement
- String query = " insert into bill (`Customer_Name`,`Customer_Account`,`Date`,`Units_Used`,`Amount`)" + " values (?, ?, ?, ?, ?)";
- 
- PreparedStatement preparedStmt = con.prepareStatement(query);
- // binding values
- preparedStmt.setString(1, cusname);
- preparedStmt.setString(2, cusaccount);
- preparedStmt.setString(3, date);
- preparedStmt.setString(4, units);
- preparedStmt.setString(5, amount);
- // execute the statement
- preparedStmt.execute();
- con.close();
- 
- String newItems = readItems();
- output = "{\"status\":\"success\", \"data\": \"" + newItems + "\"}"; 
- }
- catch (Exception e)
- {
- output = "{\"status\":\"error\", \"data\": \"Error while inserting the bill.\"}"; 
- System.err.println(e.getMessage());
-System.out.println(e.getMessage());
- }
- return output;
- }
 
+// @POST
+public String insertItem(String Customer_Name, String Customer_Account, String Date, String Units_Used,
+    String Amount) {
+  String output = "";
+  try {
+    Connection con = connect();
+    if (con == null) {
+      return "Error while connecting to the database for inserting.";
+    }
+    
+    // create a prepared statement
+    String query = " insert into bill (`Customer_Name`,`Customer_Account`,`Date`,`Units_Used`,`Amount`)" + " values (?, ?, ?, ?, ?)";
+    
+    PreparedStatement preparedStmt = con.prepareStatement(query);
+    // binding values
+    preparedStmt.setString(1, Customer_Name);
+    preparedStmt.setString(2, Customer_Account);
+    preparedStmt.setString(3, Date);
+    preparedStmt.setString(4, Units_Used);
+    preparedStmt.setString(5, Amount);
+    
+    
+    // execute the statement
+    preparedStmt.execute();
+    
+    con.close();
+    
+    // output
+    String newUse = readItems();
+    output = "{\"status\":\"success\", \"data\": \"" +newUse+ "\"}";
+    
+  } 
+  catch (Exception e) {
+    
+    output = "{\"status\":\"error\", \"data\":\"Error while inserting the Users.\"}";
+    System.err.println(e.getMessage());
+  }
+  return output;
+}
 
 
 // @GET
@@ -92,7 +98,8 @@ try {
     
     
     // buttons
-    output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary'></td>"
+    output += "<td><input name='btnUpdate' type='button' value='Update' class='btnUpdate btn btn-secondary' data-itemid='"
+    + Bill_ID + "'>" + "</td>"
         + "<td><input name='btnRemove' type='button' value='Remove' class='btnRemove btn btn-danger' data-itemid='"
         + Bill_ID + "'>" + "</td></tr>";
   }
@@ -112,7 +119,7 @@ return output;
 }
 
 
-public String updateItem(String ID, String cusname, String cusaccount, String date, String units, String amount)
+public String updateItem(String Bill_ID, String Customer_Name, String Customer_Account, String Date, String Units_Used, String Amount)
 
  {
  String output = "";
@@ -125,12 +132,12 @@ public String updateItem(String ID, String cusname, String cusaccount, String da
  String query = "UPDATE bill SET Customer_Name=?,Customer_Account=?,Date=?,Units_Used=?,Amount=? WHERE Bill_ID=?";
  PreparedStatement preparedStmt = con.prepareStatement(query);
  // binding values
- preparedStmt.setString(1, cusname);
- preparedStmt.setString(2, cusname);
- preparedStmt.setString(3, date);
- preparedStmt.setString(4, date);
- preparedStmt.setString(5, amount);
- preparedStmt.setInt(6, Integer.parseInt(ID));
+ preparedStmt.setString(1, Customer_Name);
+ preparedStmt.setString(2, Customer_Account);
+ preparedStmt.setString(3, Date);
+ preparedStmt.setString(4, Units_Used);
+ preparedStmt.setString(5, Amount);
+ preparedStmt.setInt(6, Integer.parseInt(Bill_ID));
  // execute the statement
  preparedStmt.execute();
  con.close();
@@ -165,11 +172,11 @@ public String deleteItem(String Bill_ID)
  preparedStmt.execute();
  con.close();
  String newItems = readItems();
- output = "{\"status\":\"success\", \"data\": \"" + newItems + "\"}"; 
+ output = "{\"status\":\"success\",\"data\":\""+ newItems +"\"}"; 
  }
  catch (Exception e)
  {
- output = "{\"status\":\"error\", \"data\": \"Error while deleting the bill.\"}"; 
+ output = "{\"status\":\"error\",\"data\":\"Error while deleting the bill.\"}"; 
  System.err.println(e.getMessage());
  }
  return output;
