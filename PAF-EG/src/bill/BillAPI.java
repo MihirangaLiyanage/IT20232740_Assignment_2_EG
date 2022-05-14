@@ -63,9 +63,9 @@ public class BillAPI extends HttpServlet {
 	      throws ServletException, IOException {
 	    Map paras = getParasMap(request);
 	    String output = "";
-	    if (paras.get("hidBill_IDSave") != null) {
+	    if (paras.get("hididSave") != null) {
 	    output = itemObj.updateItem(
-	        paras.get("hidBill_IDSave").toString(),
+	        paras.get("hididSave").toString(),
 	        paras.get("Customer_Name").toString(),
 	        paras.get("Customer_Account").toString(),
 	        paras.get("Date").toString(), 
@@ -74,7 +74,7 @@ public class BillAPI extends HttpServlet {
 	    }
 	    else {
 	      output = itemObj.updateItem(
-	          request.getParameter("hidBill_IDSave"),
+	          request.getParameter("hididSave"),
 	          request.getParameter("Customer_Name"),
 	          request.getParameter("Customer_Account"),
 	          request.getParameter("Date"),
