@@ -1,4 +1,4 @@
-# PAF Assigenemt 2
+# PAF Assignment 2
 
 # IT20232740_Assignment_2_EG
 
